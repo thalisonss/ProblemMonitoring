@@ -1,0 +1,28 @@
+{
+  "timerIntervalSeconds": 0,
+  "emailIntervalMinutes": 30,
+  "monitors": [
+    {
+      "name": "Nome do monitoramento",
+      "connectionString": "Server=Servidor.com;Database=Database_Teste;Trusted_Connection=True;TrustServerCertificate=True;",
+      "query": "SELECT * FROM Tabela",
+      "rowLimit": 0,
+      "commandTimeoutSeconds": 180,
+      "windowsNotification": true,
+      "email": {
+        "enabled": true,
+        "recipients": [ "teste.teste@teste.com" ],
+        "subject": "Teste Assunto Email",
+        "body": "Quantidade retornada da query: {result} Limite definido no JSON: {rowLimit}",
+        "lastSent": "2025-09-18T17:30:00"
+      }
+    }
+  ],
+  "emailConfig": {
+    "server": "smtp.gmail.com",
+    "port": 587,
+    "user": "teste@teste.com",
+    "password": "password",
+    "useSsl": true
+  }
+}
