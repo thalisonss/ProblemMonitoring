@@ -20,6 +20,8 @@ namespace ProblemMonitoring
         public bool WindowsNotification { get; set; }
         public int CommandTimeoutSeconds { get; set; } = 30;
         public MonitorEmail Email { get; set; }
+        public int ExecutionIntervalSeconds { get; set; } = 600; 
+        public DateTime? LastExecution { get; set; } = null;
     }
 
     public class MonitorEmail
@@ -29,6 +31,7 @@ namespace ProblemMonitoring
         public string Subject { get; set; }
         public string Body { get; set; }
         public DateTime? LastSent { get; set; }
+        public int EmailIntervalMinutes { get; set; }
     }
 
     public class EmailConfig

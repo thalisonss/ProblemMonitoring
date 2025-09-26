@@ -26,6 +26,13 @@ namespace ProblemMonitoring
             {
                 try
                 {
+                    DateTime lastExec = monitor.LastExecution ?? DateTime.MinValue;
+                    if ((DateTime.Now - lastExec).TotalSeconds < monitor.ExecutionIntervalSeconds)
+                    {
+                        logger.Write($"Monitor '{monitor.Name}' skipped: interval not passed.");
+                        continue;
+                    }
+
                     logger.Write($"Running monitor: {monitor.Name}");
                     int result = 0;
 
@@ -40,34 +47,36 @@ namespace ProblemMonitoring
                             while (reader.Read())
                                 rowCount++;
                             result = rowCount;
-
                         }
                     }
 
                     logger.Write($"Monitor '{monitor.Name}' result: {result}");
 
-                    if (result >= monitor.RowLimit)
+                    monitor.LastExecution = DateTime.Now;
+
+                    if (result >= monitor.RowLimit && monitor.Email.Enabled)
                     {
-                        logger.Write($"Monitor '{monitor.Name}' exceeded row limit ({monitor.RowLimit}).");
+                        DateTime lastSent = monitor.Email.LastSent ?? DateTime.MinValue;
+                        int monitorInterval = monitor.Email.EmailIntervalMinutes > 0
+                            ? monitor.Email.EmailIntervalMinutes
+                            : 60;
 
-                        if (monitor.Email.Enabled)
+                        TimeSpan interval = TimeSpan.FromMinutes(monitorInterval);
+
+                        if (DateTime.Now - lastSent >= interval)
                         {
-                            DateTime lastSent = monitor.Email.LastSent ?? DateTime.MinValue;
-                            TimeSpan interval = TimeSpan.FromMinutes(config.EmailIntervalMinutes);
-
-                            if (DateTime.Now - lastSent >= interval)
-                            {
-                                SendEmail(config, monitor, result, logger);
-                                monitor.Email.LastSent = DateTime.Now;
-                                SaveConfig(path, config);
-                                logger.Write($"Email sent for monitor '{monitor.Name}'.");
-                            }
-                            else
-                            {
-                                logger.Write($"Email for '{monitor.Name}' skipped, interval not passed.");
-                            }
+                            SendEmail(config, monitor, result, logger);
+                            monitor.Email.LastSent = DateTime.Now;
+                            logger.Write($"Email sent for monitor '{monitor.Name}'.");
+                        }
+                        else
+                        {
+                            logger.Write($"Email for '{monitor.Name}' skipped, interval not passed.");
                         }
                     }
+
+                    SaveConfig(path, config); 
+
                 }
                 catch (Exception ex)
                 {

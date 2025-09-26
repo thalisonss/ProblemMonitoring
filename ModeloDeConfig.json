@@ -1,28 +1,43 @@
 {
-  "timerIntervalSeconds": 0,
-  "emailIntervalMinutes": 30,
-  "monitors": [
+  "EmailConfig": {
+    "Server": "smtp.seu-servidor.com",
+    "Port": 587,
+    "User": "usuario@dominio.com",
+    "Password": "senha",
+    "UseSsl": true
+  },
+  "Monitors": [
     {
-      "name": "Nome do monitoramento",
-      "connectionString": "Server=Servidor.com;Database=Database_Teste;Trusted_Connection=True;TrustServerCertificate=True;",
-      "query": "SELECT * FROM Tabela",
-      "rowLimit": 0,
-      "commandTimeoutSeconds": 180,
-      "windowsNotification": true,
-      "email": {
-        "enabled": true,
-        "recipients": [ "teste.teste@teste.com" ],
-        "subject": "Teste Assunto Email",
-        "body": "Quantidade retornada da query: {result} Limite definido no JSON: {rowLimit}",
-        "lastSent": "2025-09-18T17:30:00"
-      }
+      "Name": "Teste - Teste",
+      "ConnectionString": "...",
+      "Query": "...",
+      "RowLimit": 0,
+      "CommandTimeoutSeconds": 60,
+      "Email": {
+        "Enabled": true,
+        "Recipients": [ "usuario@empresa.com" ],
+        "Subject": "[ALERTA] Teste",
+        "LastSent": null,
+        "EmailIntervalMinutes": 30
+      },
+      "ExecutionIntervalSeconds": 600,
+      "LastExecution": null
+    },
+    {
+      "Name": "Outro Monitor",
+      "ConnectionString": "...",
+      "Query": "...",
+      "RowLimit": 10,
+      "CommandTimeoutSeconds": 60,
+      "Email": {
+        "Enabled": true,
+        "Recipients": [ "outro@empresa.com" ],
+        "Subject": "[ALERTA] outro monitor",
+        "LastSent": null,
+        "EmailIntervalMinutes": 60
+      },
+      "ExecutionIntervalSeconds": 1800,
+      "LastExecution": null
     }
-  ],
-  "emailConfig": {
-    "server": "smtp.gmail.com",
-    "port": 587,
-    "user": "teste@teste.com",
-    "password": "password",
-    "useSsl": true
-  }
+  ]
 }
