@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Net;
+using System.Text.Encodings.Web;
 using System.Net.Mail;
 
 namespace ProblemMonitoring
@@ -169,7 +170,12 @@ namespace ProblemMonitoring
 
         private static void SaveConfig(string path, Config config)
         {
-            var options = new JsonSerializerOptions { WriteIndented = true };
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            };
+
             File.WriteAllText(path, JsonSerializer.Serialize(config, options));
         }
     }
